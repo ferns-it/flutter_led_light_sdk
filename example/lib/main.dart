@@ -57,6 +57,7 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                const SizedBox(height: 10.0),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.5,
                   child: GridView.builder(
@@ -67,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                     itemCount: colorsMap?.length ?? 0,
                     itemBuilder: (context, index) {
                       final colorName = colorsMap?.keys.elementAt(index);
-                      log(colorName.toString());
+
                       if (colorName == null || colorsMap == null) {
                         return const SizedBox();
                       }
@@ -81,7 +82,7 @@ class _MyAppState extends State<MyApp> {
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(120, 60),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(100.0),
                             ),
                           ),
                           child: Text(colorName),
