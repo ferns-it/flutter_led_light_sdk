@@ -155,6 +155,7 @@ class _MyAppState extends State<MyApp> {
                               child: Text(value ?? "Unknown"),
                             );
                           }).toList(),
+                          value: selectedDevice,
                         ),
                       ),
                     ),
@@ -178,6 +179,7 @@ class _MyAppState extends State<MyApp> {
                               child: Text(value.toString()),
                             );
                           }).toList(),
+                          value: selectedRate,
                         ),
                       ),
                     ),
