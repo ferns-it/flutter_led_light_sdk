@@ -56,68 +56,7 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: 10.0),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Wrap(
-                    spacing:
-                        8.0, // Adjust the spacing between buttons as needed
-                    runSpacing: 8.0, // Adjust the run spacing as needed
-                    children: List.generate(
-                      colorsMap?.length ?? 0,
-                      (index) {
-                        final colorName = colorsMap?.keys.elementAt(index);
-                        final colors = colorsMap?[colorName];
-                        if (colorName == null ||
-                            colorsMap == null ||
-                            colors == null) {
-                          return const SizedBox();
-                        }
-
-                        final rgbColor = Color.fromRGBO(
-                          colors[0],
-                          colors[1],
-                          colors[2],
-                          1,
-                        );
-                        return InkWell(
-                          onTap: () async {
-                            await _flutterLedLightSdkPlugin
-                                .setLightWithColorName(
-                              colorName,
-                            );
-                          },
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            padding: const EdgeInsets.all(8.0),
-                            margin: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: rgbColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 2,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                                child: Text(
-                              colorName,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 40.0),
                 ElevatedButton(
                   onPressed: () async {
                     final devices =
@@ -210,6 +149,67 @@ class _MyAppState extends State<MyApp> {
                       child: Text(!deviceOpened ? "Open" : "Close"),
                     )
                   ],
+                ),
+                const SizedBox(height: 40.0),
+                Expanded(
+                  child: Wrap(
+                    spacing:
+                        8.0, // Adjust the spacing between buttons as needed
+                    runSpacing: 8.0, // Adjust the run spacing as needed
+                    children: List.generate(
+                      colorsMap?.length ?? 0,
+                      (index) {
+                        final colorName = colorsMap?.keys.elementAt(index);
+                        final colors = colorsMap?[colorName];
+                        if (colorName == null ||
+                            colorsMap == null ||
+                            colors == null) {
+                          return const SizedBox();
+                        }
+
+                        final rgbColor = Color.fromRGBO(
+                          colors[0],
+                          colors[1],
+                          colors[2],
+                          1,
+                        );
+                        return InkWell(
+                          onTap: () async {
+                            await _flutterLedLightSdkPlugin
+                                .setLightWithColorName(
+                              colorName,
+                            );
+                          },
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            padding: const EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: rgbColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                                child: Text(
+                              colorName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
