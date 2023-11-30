@@ -54,6 +54,10 @@ class FlutterLedLightSdkPlugin : FlutterPlugin, MethodCallHandler {
                 flutterLightController.setLightWithRGB(call, result)
             }
 
+            "resumeDevice" -> {
+                flutterLightController.resumeDevice(result)
+            }
+
             "startLightCrazyMode" -> {
                 flutterLightController.startLightCrazyMode(call, result)
             }

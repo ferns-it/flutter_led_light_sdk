@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_led_light_sdk/flutter_led_light_sdk.dart';
 
 void main() {
@@ -28,12 +27,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _flutterLedLightSdkPlugin.getColorsMap().then((colors) {
-      setState(() {
-        colorsMap = colors;
-      });
-    });
+    _initializeData();
     super.initState();
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      final devices = await _flutterLedLightSdkPlugin.getDevices();
+      final rates = await _flutterLedLightSdkPlugin.getRates();
+      final colors = await _flutterLedLightSdkPlugin.getColorsMap();
+      final deviceMap = await _flutterLedLightSdkPlugin.resumeDevice();
+
+      if (deviceMap == null) return;
+
+      setState(() {
+        this.devices = devices;
+        this.rates = rates;
+        colorsMap = colors;
+        selectedDevice = deviceMap['dev'];
+        selectedRate = deviceMap['rate'];
+        deviceOpened = true;
+      });
+    } catch (e) {
+      debugPrint('Error initializing data: $e');
+    }
   }
 
   List<int?>? getRGBValues(String colorName) {

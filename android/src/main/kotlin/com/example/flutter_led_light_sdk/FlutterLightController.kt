@@ -3,6 +3,7 @@ package com.example.flutter_led_light_sdk
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
+import android.text.TextUtils
 import android.util.Log
 import com.example.flutter_led_light_sdk.Service.LedLightService
 import com.ys.serialport.LightController
@@ -10,6 +11,7 @@ import com.ys.serialport.LightController.Led
 import com.ys.serialport.SerialPort
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+
 
 class FlutterLightController(private val context: Context) {
     private var lightController: LightController = LightController.getInstance()
@@ -206,5 +208,24 @@ class FlutterLightController(private val context: Context) {
     }
 
 
+    fun resumeDevice(result: Result) {
+        val sp = context.getSharedPreferences("light_S", 0)
+        val command = sp.getString("_command", null as String?)
+        val dev = sp.getString("_dev", null as String?)
+        val rate = sp.getInt("_rate", -1)
+
+        if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(dev) && rate > 0) {
+            lightController.resumeStausIfNeed(context)
+
+            // Return the values through the method channel
+            val resultMap = mapOf(
+                "command" to command,
+                "dev" to dev,
+                "rate" to rate
+            )
+            return result.success(resultMap)
+        }
+        return result.success(null)
+    }
 
 }

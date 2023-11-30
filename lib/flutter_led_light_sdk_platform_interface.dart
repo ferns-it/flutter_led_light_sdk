@@ -44,6 +44,12 @@ abstract class FlutterLedLightSdkPlatform extends PlatformInterface {
     throw UnimplementedError('closeDevice() has not been implemented.');
   }
 
+  Future<Map<String, dynamic>?> resumeDevice() {
+    throw UnimplementedError(
+      'resumeDevice() has not been implemented.',
+    );
+  }
+
   Future<bool> setLightWithColorName(String colorName) {
     throw UnimplementedError(
       'setLightWithColorName() has not been implemented.',

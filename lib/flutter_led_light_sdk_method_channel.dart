@@ -154,4 +154,22 @@ class MethodChannelFlutterLedLightSdk implements FlutterLedLightSdkPlatform {
       return false;
     }
   }
+
+  @override
+  Future<Map<String, dynamic>?> resumeDevice() async {
+    try {
+      final result = await methodChannel.invokeMethod<Map<Object?, Object?>>(
+        "resumeDevice",
+      );
+      if (result == null) return null;
+      return <String, dynamic>{
+        "dev": result['dev'],
+        "command": result['command'],
+        "rate": result["rate"]
+      };
+    } on Exception catch (e) {
+      log(e.toString(), error: "resumeDevice");
+      return null;
+    }
+  }
 }

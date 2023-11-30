@@ -37,6 +37,10 @@ class FlutterLedLightSdk {
         .setLightWithRGB(red, green, blue);
   }
 
+  Future<Map<String, dynamic>?> resumeDevice() async {
+    return FlutterLedLightSdkPlatform.instance.resumeDevice();
+  }
+
   Future<bool> startLightCrazyMode([int lightTimer = 0]) {
     return FlutterLedLightSdkPlatform.instance.startLightCrazyMode(lightTimer);
   }

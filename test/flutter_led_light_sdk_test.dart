@@ -71,6 +71,12 @@ class MockFlutterLedLightSdkPlatform
     // TODO: implement setLightWithRGB
     throw UnimplementedError();
   }
+
+  @override
+  Future<Map<String, dynamic>?> resumeDevice() {
+    // TODO: implement resumeDevice
+    throw UnimplementedError();
+  }
 }
 
 void main() {
