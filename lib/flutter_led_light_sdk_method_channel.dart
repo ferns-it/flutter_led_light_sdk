@@ -37,13 +37,18 @@ class MethodChannelFlutterLedLightSdk implements FlutterLedLightSdkPlatform {
   }
 
   @override
-  Future<Map<String, List<Object?>>?> getColorsMap() async {
+  Future<Map<String, List<int>>?> getColorsMap() async {
     try {
       final dynamic result = await methodChannel.invokeMethod('getColorsMap');
       if (result is Map<Object?, Object?>) {
-        final colorsMap = result.cast<String, List<int>>();
-
-        return colorsMap;
+        final parsedMap = result.map<String, List<int>>((key, value) {
+          final list = value as List<Object?>;
+          final listItem1 = list[0] as int;
+          final listItem2 = list[1] as int;
+          final listItem3 = list[2] as int;
+          return MapEntry(key as String, [listItem1, listItem2, listItem3]);
+        });
+        return parsedMap;
       }
       return null;
     } on Exception catch (e) {
@@ -72,11 +77,13 @@ class MethodChannelFlutterLedLightSdk implements FlutterLedLightSdkPlatform {
   }
 
   @override
-  Future<void> setLightWithColorName(colorName) async {
-    final changed =
-        await methodChannel.invokeMethod<bool>('setLightWithColorName', {
-      'colorName': colorName,
-    });
+  Future<void> setLightWithColorName(String colorName) async {
+    final changed = await methodChannel.invokeMethod<bool>(
+      'setLightWithColorName',
+      {
+        'colorName': colorName,
+      },
+    );
     log(changed.toString(), name: "changed");
   }
 }

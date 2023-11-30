@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_led_light_sdk/flutter_led_light_sdk.dart';
 
 void main() {
@@ -25,7 +24,7 @@ class _MyAppState extends State<MyApp> {
 
   bool deviceOpened = false;
 
-  Map<String, List<Object?>>? colorsMap;
+  Map<String, List<int>>? colorsMap;
 
   @override
   void initState() {
@@ -38,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   List<int?>? getRGBValues(String colorName) {
-    return colorsMap?[colorName] as List<int?>?;
+    return colorsMap?[colorName];
   }
 
   @override
@@ -60,35 +59,63 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(height: 10.0),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.5,
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 10,
-                    ),
-                    itemCount: colorsMap?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final colorName = colorsMap?.keys.elementAt(index);
+                  child: Wrap(
+                    spacing:
+                        8.0, // Adjust the spacing between buttons as needed
+                    runSpacing: 8.0, // Adjust the run spacing as needed
+                    children: List.generate(
+                      colorsMap?.length ?? 0,
+                      (index) {
+                        final colorName = colorsMap?.keys.elementAt(index);
+                        final colors = colorsMap?[colorName];
+                        if (colorName == null ||
+                            colorsMap == null ||
+                            colors == null) {
+                          return const SizedBox();
+                        }
 
-                      if (colorName == null || colorsMap == null) {
-                        return const SizedBox();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () async {
+                        final rgbColor = Color.fromRGBO(
+                          colors[0],
+                          colors[1],
+                          colors[2],
+                          1,
+                        );
+                        return InkWell(
+                          onTap: () async {
                             await _flutterLedLightSdkPlugin
-                                .setLightWithColorName(colorName);
+                                .setLightWithColorName(
+                              colorName,
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(120, 60),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            padding: const EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: rgbColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
                             ),
+                            child: Center(
+                                child: Text(
+                              colorName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
                           ),
-                          child: Text(colorName),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 ElevatedButton(

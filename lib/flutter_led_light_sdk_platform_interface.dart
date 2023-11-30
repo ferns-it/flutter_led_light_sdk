@@ -32,7 +32,7 @@ abstract class FlutterLedLightSdkPlatform extends PlatformInterface {
     throw UnimplementedError('getRates() has not been implemented.');
   }
 
-  Future<Map<String, List<Object?>>?> getColorsMap() {
+  Future<Map<String, List<int>>?> getColorsMap() {
     throw UnimplementedError('getColorsMap() has not been implemented.');
   }
 

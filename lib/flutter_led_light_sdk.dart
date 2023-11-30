@@ -24,7 +24,7 @@ class FlutterLedLightSdk {
     return FlutterLedLightSdkPlatform.instance.closeDevice();
   }
 
-  Future<Map<String, List<Object?>>?> getColorsMap() {
+  Future<Map<String, List<int>>?> getColorsMap() {
     return FlutterLedLightSdkPlatform.instance.getColorsMap();
   }
 
