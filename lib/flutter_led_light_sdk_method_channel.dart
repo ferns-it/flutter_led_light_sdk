@@ -77,13 +77,81 @@ class MethodChannelFlutterLedLightSdk implements FlutterLedLightSdkPlatform {
   }
 
   @override
-  Future<void> setLightWithColorName(String colorName) async {
+  Future<bool> setLightWithColorName(String colorName) async {
     final changed = await methodChannel.invokeMethod<bool>(
       'setLightWithColorName',
       {
         'colorName': colorName,
       },
     );
-    log(changed.toString(), name: "changed");
+    return changed ?? false;
+  }
+
+  @override
+  Future<bool> startLightCrazyMode(int lightTimer) async {
+    try {
+      final result =
+          await methodChannel.invokeMethod<bool>("startLightCrazyMode", {
+        'lightTimer': lightTimer,
+      });
+      return result ?? false;
+    } on Exception catch (e) {
+      log(e.toString(), error: "startLightCrazyMode");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> stopLightCrazyMode() async {
+    try {
+      final result =
+          await methodChannel.invokeMethod<bool>("stopLightCrazyMode");
+      return result ?? false;
+    } on Exception catch (e) {
+      log(e.toString(), error: "stopLightCrazyMode");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> startLightLiveMode(int lightLength) async {
+    try {
+      final result =
+          await methodChannel.invokeMethod<bool>("startLightLiveMode", {
+        'lightLength': lightLength,
+      });
+      return result ?? false;
+    } on Exception catch (e) {
+      log(e.toString(), error: "startLightLiveMode");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> stopLightLiveMode() async {
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        "stopLightLiveMode",
+      );
+      return result ?? false;
+    } on Exception catch (e) {
+      log(e.toString(), error: "stopLightLiveMode");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> setLightWithRGB(int red, int green, int blue) async {
+    try {
+      final result = await methodChannel.invokeMethod<bool>("setLightWithRGB", {
+        "red": red,
+        "green": green,
+        "blue": blue,
+      });
+      return result ?? false;
+    } on Exception catch (e) {
+      log(e.toString(), error: "stopLightLiveMode");
+      return false;
+    }
   }
 }

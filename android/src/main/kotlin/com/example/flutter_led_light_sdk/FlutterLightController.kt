@@ -1,9 +1,12 @@
 package com.example.flutter_led_light_sdk
 
 import android.content.Context
+import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
+import com.example.flutter_led_light_sdk.Service.LedLightService
 import com.ys.serialport.LightController
+import com.ys.serialport.LightController.Led
 import com.ys.serialport.SerialPort
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
@@ -98,14 +101,110 @@ class FlutterLightController(private val context: Context) {
     }
 
 
+    fun setLightWithRGB(call: MethodCall, result: Result) {
+        try {
+            val red = call.argument<Int>("red")
+            val green = call.argument<Int>("green")
+            val blue = call.argument<Int>("blue")
+
+            if (red != null && green != null && blue != null) {
+                adjustColors(red, green, blue)
+                result.success(true)
+            } else {
+                Log.d(LOG_TAG, "Invalid RGB values")
+                result.error("INVALID_RGB_VALUES", "Invalid RGB values", null)
+            }
+
+        } catch (e: Exception) {
+            result.error("SET_LIGHT_ERROR", "Error setting light: ${e.message}", null)
+        }
+    }
+
+
     private fun adjustColors(red: Int, green: Int, blue: Int) {
         Thread {
-            lightController.keepMode(LightController.Led.RED, 0, red)
+            lightController.keepMode(Led.RED, 0, red)
             SystemClock.sleep(20)
-            lightController.keepMode(LightController.Led.GREEN, 0, green)
+            lightController.keepMode(Led.GREEN, 0, green)
             SystemClock.sleep(20)
-            lightController.keepMode(LightController.Led.BLUE, 0, blue)
+            lightController.keepMode(Led.BLUE, 0, blue)
         }.start()
     }
+
+    fun startLightLiveMode(call: MethodCall, result: Result) {
+        try {
+            val lightLength = call.argument<Int>("lightLength")
+            val intent = Intent(context, LedLightService::class.java)
+            intent.putExtra("lightLength", lightLength)
+            context.startService(intent)
+            result.success(true);
+        } catch (e: Exception) {
+            result.error(
+                "START_LIGHT_LIVE_MODE",
+                "Error white starting light live mode: ${e.message}",
+                null
+            )
+        }
+    }
+
+    fun stopLightLiveMode(result: Result) {
+        try {
+            val closeLeds = listOf(Led.RED, Led.GREEN, Led.BLUE)
+            lightController.close(closeLeds)
+            result.success(true)
+        } catch (e: Exception) {
+            result.error(
+                "STOP_LIGHT_LIVE_MODE",
+                "Error stopping light live mode: ${e.message}",
+                null
+            )
+        }
+    }
+
+
+    fun startLightCrazyMode(call: MethodCall, result: Result) {
+        try {
+            val lightTimer = call.argument<Int>("lightTimer")
+            lightController.crazyMode(lightTimer ?: 0)
+            result.success(true);
+        } catch (e: Exception) {
+            result.error(
+                "START_LIGHT_CRAZY_MODE",
+                "Error white starting light crazy mode: ${e.message}",
+                null
+            )
+        }
+    }
+
+    fun stopLightCrazyMode(result: Result) {
+        try {
+            val closeLeds = listOf(Led.RED, Led.GREEN, Led.BLUE)
+            lightController.close(closeLeds)
+            result.success(true)
+        } catch (e: Exception) {
+            result.error(
+                "STOP_LIGHT_CRAZY_MODE",
+                "Error stopping light crazy mode: ${e.message}",
+                null
+            )
+        }
+    }
+
+
+    fun stopLightCrazyModeWithoutResult() {
+        try {
+            val intent = Intent(context, LedLightService::class.java)
+            context.stopService(intent)
+            lightController.close()
+        } catch (e: Exception) {
+            Log.e(
+                LOG_TAG,
+                "Error white stopping light crazy mode: ${e.message}",
+                null
+            )
+        }
+    }
+
+
 
 }

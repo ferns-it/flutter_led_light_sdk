@@ -57,19 +57,63 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 40.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    final devices =
-                        await _flutterLedLightSdkPlugin.getDevices();
-                    setState(() {
-                      this.devices = devices;
-                    });
-                    final rates = await _flutterLedLightSdkPlugin.getRates();
-                    setState(() {
-                      this.rates = rates;
-                    });
-                  },
-                  child: const Text("Scan Devices & Rates"),
+                Row(
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () async {
+                        final devices =
+                            await _flutterLedLightSdkPlugin.getDevices();
+                        setState(() {
+                          this.devices = devices;
+                        });
+                        final rates =
+                            await _flutterLedLightSdkPlugin.getRates();
+                        setState(() {
+                          this.rates = rates;
+                        });
+                      },
+                      child: const Text("Scan Devices & Rates"),
+                    ),
+                    const SizedBox(width: 40.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _flutterLedLightSdkPlugin.startLightCrazyMode();
+                      },
+                      child: const Text("Start Crazy Mode"),
+                    ),
+                    const SizedBox(width: 40.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _flutterLedLightSdkPlugin.stopLightCrazyMode();
+                      },
+                      child: const Text("Stop Crazy Mode"),
+                    ),
+                    const SizedBox(width: 40.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _flutterLedLightSdkPlugin.startLightLiveMode();
+                      },
+                      child: const Text("Start Live Mode"),
+                    ),
+                    const SizedBox(width: 40.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _flutterLedLightSdkPlugin.stopLightLiveMode();
+                      },
+                      child: const Text("Stop Live Mode"),
+                    ),
+                    const SizedBox(width: 40.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _flutterLedLightSdkPlugin.setLightWithRGB(
+                          30,
+                          215,
+                          96,
+                        );
+                      },
+                      child: const Text("Set Custom Color"),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 30),
                 Row(

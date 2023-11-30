@@ -28,7 +28,28 @@ class FlutterLedLightSdk {
     return FlutterLedLightSdkPlatform.instance.getColorsMap();
   }
 
-  Future<void> setLightWithColorName(String colorName) {
+  Future<bool> setLightWithColorName(String colorName) {
     return FlutterLedLightSdkPlatform.instance.setLightWithColorName(colorName);
+  }
+
+  Future<bool> setLightWithRGB(int red, int green, int blue) {
+    return FlutterLedLightSdkPlatform.instance
+        .setLightWithRGB(red, green, blue);
+  }
+
+  Future<bool> startLightCrazyMode([int lightTimer = 0]) {
+    return FlutterLedLightSdkPlatform.instance.startLightCrazyMode(lightTimer);
+  }
+
+  Future<bool> stopLightCrazyMode() {
+    return FlutterLedLightSdkPlatform.instance.stopLightCrazyMode();
+  }
+
+  Future<bool> startLightLiveMode([int lightLength = 0]) {
+    return FlutterLedLightSdkPlatform.instance.startLightLiveMode(lightLength);
+  }
+
+  Future<bool> stopLightLiveMode() {
+    return FlutterLedLightSdkPlatform.instance.stopLightLiveMode();
   }
 }

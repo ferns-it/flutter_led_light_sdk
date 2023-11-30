@@ -2,11 +2,7 @@ package com.example.flutter_led_light_sdk
 
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
-import com.example.flutter_led_light_sdk.Service.LedLightService
-import com.ys.serialport.LightController
-import com.ys.serialport.SerialPort
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -54,12 +50,33 @@ class FlutterLedLightSdkPlugin : FlutterPlugin, MethodCallHandler {
                 flutterLightController.setLightWithColorName(call, result)
             }
 
+            "setLightWithRGB" -> {
+                flutterLightController.setLightWithRGB(call, result)
+            }
+
+            "startLightCrazyMode" -> {
+                flutterLightController.startLightCrazyMode(call, result)
+            }
+
+            "stopLightCrazyMode" -> {
+                flutterLightController.stopLightCrazyMode(result)
+            }
+
+            "startLightLiveMode" -> {
+                flutterLightController.startLightLiveMode(call, result)
+            }
+
+            "stopLightLiveMode" -> {
+                flutterLightController.stopLightLiveMode(result)
+            }
+
             else -> result.notImplemented()
         }
 
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        flutterLightController.stopLightCrazyModeWithoutResult();
         channel.setMethodCallHandler(null)
     }
 }

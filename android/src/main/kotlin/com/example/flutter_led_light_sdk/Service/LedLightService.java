@@ -14,7 +14,7 @@ public class LedLightService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        liveLightModel();
+
     }
 
     @Override
@@ -25,7 +25,13 @@ public class LedLightService extends Service {
         } else {
             intervalTime = lightLength * 1000 + 500;
         }
-        t.start();
+        // Check if the thread is null or has finished executing
+        if (t == null || t.getState() == Thread.State.TERMINATED) {
+            liveLightModel();
+            t.start(); // Start the thread
+        }
+
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -36,26 +42,29 @@ public class LedLightService extends Service {
 
     private void liveLightModel() {
         Log.d("Flutter Led Light SDK", "Live Light Model Called");
-        t = new Thread(() -> {
-            try {
-                LightController lightController = LightController.getInstance();
-                LightController.Led[] leds = {LightController.Led.RED, LightController.Led.GREEN};
+        if (t == null || t.getState() == Thread.State.TERMINATED) {
+            t = new Thread(() -> {
+                try {
+                    LightController lightController = LightController.getInstance();
+                    LightController.Led[] leds = {LightController.Led.RED, LightController.Led.GREEN, LightController.Led.BLUE};
 
-                while (lightLoop) {
-                    for (LightController.Led led : leds) {
-                        if (!lightLoop) {
-                            break; // Exit the loop if lightLoop becomes false
+                    while (lightLoop) {
+                        for (LightController.Led led : leds) {
+                            if (!lightLoop) {
+                                break; // Exit the loop if lightLoop becomes false
+                            }
+                            Log.d("Flutter Led Light SDK", "Still Calling....");
+                            lightController.liveMode(led, lightLength);
+                            SystemClock.sleep(intervalTime);
                         }
-                        Log.d("Flutter Led Light SDK", "Still Calling....");
-                        lightController.liveMode(led, lightLength);
-                        SystemClock.sleep(intervalTime);
                     }
+                } catch (Exception e) {
+                    // Handle exceptions here, you can log the exception or perform other actions.
+                    Log.e("Flutter Led Light SDK", "Exception in liveLightModel: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                // Handle exceptions here, you can log the exception or perform other actions.
-                Log.e("Flutter Led Light SDK", "Exception in liveLightModel: " + e.getMessage());
-            }
-        });
+            });
+        }
+
     }
 
 
