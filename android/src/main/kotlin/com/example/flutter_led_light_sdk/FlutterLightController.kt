@@ -11,6 +11,10 @@ import com.ys.serialport.LightController.Led
 import com.ys.serialport.SerialPort
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FlutterLightController(private val context: Context) {
@@ -36,9 +40,19 @@ class FlutterLightController(private val context: Context) {
 
 
     fun getDevices(result: Result) {
-        val devices: Array<String> = SerialPort.getDevices()
-        val devicesList: List<String> = devices.toList()
-        result.success(devicesList)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val devices: Array<String> = SerialPort.getDevices()
+                val devicesList: List<String> = devices.toList()
+                withContext(Dispatchers.Main) {
+                    result.success(devicesList)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    result.error("GET_DEVICES_ERROR", e.message, null)
+                }
+            }
+        }
     }
 
 
